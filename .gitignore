@@ -2,6 +2,7 @@
 venv-pytorch
 venv-vae-pytorch
 tmp.*
+percept-sim
 
 
 *.ipynb_checkpoints*

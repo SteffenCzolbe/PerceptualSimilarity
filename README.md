@@ -87,13 +87,13 @@ To transition loss functions tuned on the 2AFC dataset to the loss provider, we 
 ## Train VAEs
 The VAEs presented in the paper can be retrained with code from directories ``src/vae/mnist`` and ``src/vae/celebA``. Each directory contains 5 Files:
 * the implementation of the model in `celebA_vae.py` or `mnist_vae.py` 
-* a notebook  `train.ipynb`, containing code to train the model
+* a notebook  `train.ipynb`, containing code to train the model. Loss function and Hyperparameters are defined in the last cell. During training, model checkpoints and samples are saved in the `results` directory.
 * a directory `results`, in which models and sample images are saved during training
 * a notebook `evaluation.ipynb`, containg code to generate the comparison images shown in the paper.
 * a directory `comparison`, in which comparison images are saved
 
 
 ## Training Resource Requirements
-The resource experiment is located in the notebook `src/runtime/runtime_experiment.ipynb`. The last cell prints averaged results.
+The resource experiment is located in the notebook `src/runtime/runtime_experiment.ipynb`. Re-Create the experiment by executing all cells of the notebook in order. The last cell prints averaged results.
 
 

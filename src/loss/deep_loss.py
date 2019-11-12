@@ -16,10 +16,12 @@ class NetLinLayer(nn.Module):
         layers += [nn.Conv2d(chn_in, chn_out, 1, stride=1, padding=0, bias=False),]
         self.model = nn.Sequential(*layers)
 
+
 def normalize_tensor(in_feat,eps=1e-10):
     # norm_factor = torch.sqrt(torch.sum(in_feat**2,dim=1)).view(in_feat.size()[0],1,in_feat.size()[2],in_feat.size()[3]).repeat(1,in_feat.size()[1],1,1)
     norm_factor = torch.sqrt(torch.sum(in_feat**2,dim=1)).view(in_feat.size()[0],1,in_feat.size()[2],in_feat.size()[3])
     return in_feat/(norm_factor.expand_as(in_feat)+eps)
+
 
 class vgg16(torch.nn.Module):
     def __init__(self, requires_grad=False, pretrained=True):
@@ -58,6 +60,98 @@ class vgg16(torch.nn.Module):
         h_relu5_3 = h
         vgg_outputs = namedtuple("VggOutputs", ['relu1_2', 'relu2_2', 'relu3_3', 'relu4_3', 'relu5_3'])
         out = vgg_outputs(h_relu1_2, h_relu2_2, h_relu3_3, h_relu4_3, h_relu5_3)
+        return out
+
+
+class squeezenet(torch.nn.Module):
+    def __init__(self, requires_grad=False, pretrained=True):
+        super(squeezenet, self).__init__()
+        pretrained_features = models.squeezenet1_1(pretrained=pretrained).features
+        self.slice1 = torch.nn.Sequential()
+        self.slice2 = torch.nn.Sequential()
+        self.slice3 = torch.nn.Sequential()
+        self.slice4 = torch.nn.Sequential()
+        self.slice5 = torch.nn.Sequential()
+        self.slice6 = torch.nn.Sequential()
+        self.slice7 = torch.nn.Sequential()
+        self.N_slices = 7
+        for x in range(2):
+            self.slice1.add_module(str(x), pretrained_features[x])
+        for x in range(2,5):
+            self.slice2.add_module(str(x), pretrained_features[x])
+        for x in range(5, 8):
+            self.slice3.add_module(str(x), pretrained_features[x])
+        for x in range(8, 10):
+            self.slice4.add_module(str(x), pretrained_features[x])
+        for x in range(10, 11):
+            self.slice5.add_module(str(x), pretrained_features[x])
+        for x in range(11, 12):
+            self.slice6.add_module(str(x), pretrained_features[x])
+        for x in range(12, 13):
+            self.slice7.add_module(str(x), pretrained_features[x])
+        if not requires_grad:
+            for param in self.parameters():
+                param.requires_grad = False
+
+    def forward(self, X):
+        h = self.slice1(X)
+        h_relu1 = h
+        h = self.slice2(h)
+        h_relu2 = h
+        h = self.slice3(h)
+        h_relu3 = h
+        h = self.slice4(h)
+        h_relu4 = h
+        h = self.slice5(h)
+        h_relu5 = h
+        h = self.slice6(h)
+        h_relu6 = h
+        h = self.slice7(h)
+        h_relu7 = h
+        vgg_outputs = namedtuple("SqueezeOutputs", ['relu1','relu2','relu3','relu4','relu5','relu6','relu7'])
+        out = vgg_outputs(h_relu1,h_relu2,h_relu3,h_relu4,h_relu5,h_relu6,h_relu7)
+
+        return out
+
+
+class alexnet(torch.nn.Module):
+    def __init__(self, requires_grad=False, pretrained=True):
+        super(alexnet, self).__init__()
+        alexnet_pretrained_features = models.alexnet(pretrained=pretrained).features
+        self.slice1 = torch.nn.Sequential()
+        self.slice2 = torch.nn.Sequential()
+        self.slice3 = torch.nn.Sequential()
+        self.slice4 = torch.nn.Sequential()
+        self.slice5 = torch.nn.Sequential()
+        self.N_slices = 5
+        for x in range(2):
+            self.slice1.add_module(str(x), alexnet_pretrained_features[x])
+        for x in range(2, 5):
+            self.slice2.add_module(str(x), alexnet_pretrained_features[x])
+        for x in range(5, 8):
+            self.slice3.add_module(str(x), alexnet_pretrained_features[x])
+        for x in range(8, 10):
+            self.slice4.add_module(str(x), alexnet_pretrained_features[x])
+        for x in range(10, 12):
+            self.slice5.add_module(str(x), alexnet_pretrained_features[x])
+        if not requires_grad:
+            for param in self.parameters():
+                param.requires_grad = False
+
+    def forward(self, X):
+        h = self.slice1(X)
+        h_relu1 = h
+        h = self.slice2(h)
+        h_relu2 = h
+        h = self.slice3(h)
+        h_relu3 = h
+        h = self.slice4(h)
+        h_relu4 = h
+        h = self.slice5(h)
+        h_relu5 = h
+        alexnet_outputs = namedtuple("AlexnetOutputs", ['relu1', 'relu2', 'relu3', 'relu4', 'relu5'])
+        out = alexnet_outputs(h_relu1, h_relu2, h_relu3, h_relu4, h_relu5)
+
         return out
 
 class PNetLin(nn.Module):

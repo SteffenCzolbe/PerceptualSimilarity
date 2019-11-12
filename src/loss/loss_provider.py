@@ -13,7 +13,7 @@ from ssim import SSIM
 
 class LossProvider():
     def __init__(self):
-        self.loss_functions = ['L1', 'L2', 'SSIM', 'Watson-dct', 'Watson-fft', 'Watson-vgg', 'Deeploss-vgg']
+        self.loss_functions = ['L1', 'L2', 'SSIM', 'Watson-dct', 'Watson-fft', 'Watson-vgg', 'Deeploss-vgg', 'Deeploss-squeeze']
         self.color_models = ['LA', 'RGB']
 
     def load_state_dict(self, filename):
@@ -31,13 +31,13 @@ class LossProvider():
         is_greyscale = colorspace in ['grey', 'Grey', 'LA', 'greyscale', 'grey-scale']
         
 
-        if model in ['l2', 'L2']:
+        if model.lower() in ['l2']:
             loss = nn.MSELoss(reduction=reduction)
-        elif model in ['l1', 'L1']:
+        elif model.lower() in ['l1']:
             loss = nn.L1Loss(reduction=reduction)
-        elif model in ['ssim', 'SSIM']:
+        elif model.lower() in ['ssim']:
             loss = SSIM(size_average=(reduction in ['sum', 'mean']))
-        elif model in ['Watson', 'watson', 'Watson-dct', 'watson-dct']:
+        elif model.lower() in ['watson', 'watson-dct']:
             if is_greyscale:
                 if deterministic:
                     loss = WatsonDistance(reduction=reduction)
@@ -48,11 +48,11 @@ class LossProvider():
             else:
                 if deterministic:
                     loss = ColorWrapper(WatsonDistance, (), {'reduction': reduction})
-                    loss.loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
+                    loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
                 else:
                     loss = ShiftWrapper(ColorWrapper, (WatsonDistance, (), {'reduction': reduction}), {})
                     loss.loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
-        elif model in ['Watson-fft', 'watson-fft']:
+        elif model.lower() in ['watson-fft', 'watson-dft']:
             if is_greyscale:
                 if deterministic:
                     loss = WatsonDistanceFft(reduction=reduction)
@@ -63,28 +63,35 @@ class LossProvider():
             else:
                 if deterministic:
                     loss = ColorWrapper(WatsonDistanceFft, (), {'reduction': reduction})
-                    loss.loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
+                    loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
                 else:
                     loss = ShiftWrapper(ColorWrapper, (WatsonDistanceFft, (), {'reduction': reduction}), {})
                     loss.loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
-        elif model in ['Watson-vgg', 'watson-vgg', 'Watson-deep', 'watson-deep']:
+        elif model.lower() in ['watson-vgg', 'watson-deep']:
             if is_greyscale:
                 loss = GreyscaleWrapper(WatsonDistanceVgg, (), {'reduction': reduction})
                 loss.loss.load_state_dict(self.load_state_dict('gray_watson_vgg_trial0.pth'))
             else:
                 loss = WatsonDistanceVgg(reduction=reduction)
                 loss.load_state_dict(self.load_state_dict('rgb_watson_vgg_trial0.pth'))
-        elif model in ['Deeploss', 'deeploss', 'Deeploss-vgg', 'deeploss-vgg']:
+        elif model.lower() in ['deeploss-vgg']:
             if is_greyscale:
-                loss = GreyscaleWrapper(PNetLin, (), {'reduction': reduction, 'use_dropout': False})
+                loss = GreyscaleWrapper(PNetLin, (), {'pnet_type': 'vgg', 'reduction': reduction, 'use_dropout': False})
                 loss.loss.load_state_dict(self.load_state_dict('gray_pnet_lin_vgg_trial0.pth'))
             else:
-                loss = PNetLin(reduction=reduction, use_dropout=False)
+                loss = PNetLin(pnet_type='vgg', reduction=reduction, use_dropout=False)
                 loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_vgg_trial0.pth'))
+        elif model.lower() in ['deeploss-squeeze']:
+            if is_greyscale:
+                loss = GreyscaleWrapper(PNetLin, (), {'pnet_type': 'squeeze', 'reduction': reduction, 'use_dropout': False})
+                loss.loss.load_state_dict(self.load_state_dict('gray_pnet_lin_squeeze_trial0.pth'))
+            else:
+                loss = PNetLin(pnet_type='squeeze', reduction=reduction, use_dropout=False)
+                loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_squeeze_trial0.pth'))
         else:
             raise Exception('Metric "{}" not implemented'.format(model))
 
-        # freese all training of the loss functions
+        # freeze all training of the loss functions
         for param in loss.parameters():
             param.requires_grad = False
         

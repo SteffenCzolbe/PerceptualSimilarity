@@ -1,6 +1,5 @@
 ## virtual-enviroment
-venv-pytorch
-venv-vae-pytorch
+venv*
 tmp.*
 percept-sim
 

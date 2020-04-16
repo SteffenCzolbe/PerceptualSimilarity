@@ -104,7 +104,7 @@ python-xlib==0.26
 pytz==2019.3
 PyWavelets==1.1.1
 pyxdg==0.25
-PyYAML==3.12
+PyYAML==5.1
 pyzmq==19.0.0
 qtconsole==4.7.1
 QtPy==1.9.0

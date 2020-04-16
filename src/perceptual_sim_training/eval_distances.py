@@ -35,6 +35,7 @@ if __name__ == "__main__":
     metrics = {}
     metrics["Watson-fft"] = lp.get_loss_function("Watson-fft", reduction="sum").to(device)
     metrics["L2"] = lp.get_loss_function("L2", reduction="sum").to(device)
+    metrics["SSIM"] = lp.get_loss_function("SSIM", reduction="sum").to(device)
     metrics["Deeploss-vgg"] = lp.get_loss_function("Deeploss-vgg", reduction="sum").to(device)
 
     # set-up output file

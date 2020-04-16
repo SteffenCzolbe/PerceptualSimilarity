@@ -60,8 +60,6 @@ if __name__ == "__main__":
             ).tolist()
             out_data[f"{metric}_pred"] += ((d0 > d1) * 1.0).tolist()
 
-        break
-
     # write output data
     df = pd.DataFrame(out_data)
     df.to_csv("comparison.csv")

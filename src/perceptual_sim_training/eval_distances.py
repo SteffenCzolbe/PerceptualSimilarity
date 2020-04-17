@@ -1,3 +1,8 @@
+"""
+computes score of loss functions on individual images.
+saves the output in a file 'comparison.csv'
+"""
+
 import torch
 import numpy as np
 from data import data_loader as dl

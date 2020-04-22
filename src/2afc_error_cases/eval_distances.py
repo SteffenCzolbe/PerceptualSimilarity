@@ -5,13 +5,15 @@ saves the output in a file 'comparison.csv'
 
 import torch
 import numpy as np
-from data import data_loader as dl
-from models import dist_model as dm
 import pandas as pd
 import os
 import sys
-from tqdm import tqdm
 from collections import defaultdict
+from tqdm import tqdm
+
+sys.path.append(os.path.abspath("../perceptual_sim_training"))
+from data import data_loader as dl
+from models import dist_model as dm
 
 sys.path.append(os.path.abspath("../loss"))
 from loss.loss_provider import LossProvider
@@ -32,16 +34,23 @@ if __name__ == "__main__":
     ]
     dataset_mode = "2afc"
     data_loader = dl.CreateDataLoader(
-        datasets, dataset_mode=dataset_mode, batch_size=1
+        datasets,
+        dataroot="../perceptual_sim_training/dataset",
+        dataset_mode=dataset_mode,
+        batch_size=1,
     ).load_data()
 
     # load functions to evaluate
     lp = LossProvider()
     metrics = {}
-    metrics["Watson-fft"] = lp.get_loss_function("Watson-fft", reduction="sum").to(device)
+    metrics["Watson-fft"] = lp.get_loss_function("Watson-fft", reduction="sum").to(
+        device
+    )
     metrics["L2"] = lp.get_loss_function("L2", reduction="sum").to(device)
     metrics["SSIM"] = lp.get_loss_function("SSIM", reduction="sum").to(device)
-    metrics["Deeploss-vgg"] = lp.get_loss_function("Deeploss-vgg", reduction="sum").to(device)
+    metrics["Deeploss-vgg"] = lp.get_loss_function("Deeploss-vgg", reduction="sum").to(
+        device
+    )
 
     # set-up output file
     out_data = defaultdict(lambda: [])
@@ -65,9 +74,9 @@ if __name__ == "__main__":
             d1 = fun(p1, ref)
             out_data[f"{metric}_d0"] += [d0.item()]
             out_data[f"{metric}_d1"] += [d1.item()]
-            out_data[f"{metric}_score"] += [((
-                (d0 < d1) * (1.0 - gt) + (d1 < d0) * gt + (d1 == d0) * 0.5
-            )).item()]
+            out_data[f"{metric}_score"] += [
+                (((d0 < d1) * (1.0 - gt) + (d1 < d0) * gt + (d1 == d0) * 0.5)).item()
+            ]
             out_data[f"{metric}_pred"] += [((d0 > d1) * 1.0).item()]
 
     # write output data

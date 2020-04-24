@@ -95,7 +95,10 @@ deep_better = data[data["Wat-Deep"] == -1.0]
 # combine datasets
 filtered_data = wat_better.append(deep_better)
 
-# shuffle data
-filtered_data = filtered_data.sample(frac=1).reset_index(drop=True)
 
-make_figure(filtered_data, "fig.png")
+for i in range(10):
+    # shuffle data
+    filtered_data = filtered_data.sample(frac=1, random_state=i).reset_index(drop=True)
+
+    # make fig
+    make_figure(filtered_data, f"2AFC_error_cases_random_{i}.png")

@@ -1,19 +1,21 @@
 import torch
 import torch.nn as nn
 import os
+from collections import OrderedDict
 
 from color_wrapper import ColorWrapper, GreyscaleWrapper
 from shift_wrapper import ShiftWrapper
 from watson import WatsonDistance
 from watson_fft import WatsonDistanceFft
 from watson_vgg import WatsonDistanceVgg
+from robust_loss import RobustLoss
 from deep_loss import PNetLin
 from ssim import SSIM
 
 
 class LossProvider():
     def __init__(self):
-        self.loss_functions = ['L1', 'L2', 'SSIM', 'Watson-dct', 'Watson-fft', 'Watson-vgg', 'Deeploss-vgg', 'Deeploss-squeeze']
+        self.loss_functions = ['L1', 'L2', 'SSIM', 'Watson-dct', 'Watson-fft', 'Watson-vgg', 'Deeploss-vgg', 'Deeploss-squeeze', 'Adaptive']
         self.color_models = ['LA', 'RGB']
 
     def load_state_dict(self, filename):
@@ -88,6 +90,15 @@ class LossProvider():
             else:
                 loss = PNetLin(pnet_type='squeeze', reduction=reduction, use_dropout=False)
                 loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_squeeze_trial0.pth'))
+        elif model.lower() in ['adaptive']:
+            def map_weights(states):
+                return OrderedDict([(k[1:], v) for k, v in states.items()])
+            if is_greyscale:
+                loss = GreyscaleWrapper(RobustLoss, (), {'image_size':[3,64,64], 'use_gpu':False, 'trainable':False, 'reduction':reduction})
+                loss.loss.load_state_dict(map_weights(self.load_state_dict('gray_adaptive_trial0.pth')))
+            else:
+                loss = RobustLoss(image_size=[3,64,64], use_gpu=False, trainable=False, reduction=reduction)
+                loss.load_state_dict(map_weights(self.load_state_dict('rgb_adaptive_trial0.pth')))
         else:
             raise Exception('Metric "{}" not implemented'.format(model))
 

@@ -101,6 +101,9 @@ class DistModel(BaseModel):
             self.net = networks.DSSIM(use_gpu=use_gpu,colorspace=colorspace)
             self.model_name = 'SSIM'
             self.batch_size = 1
+        elif(self.model in ['Adaptive', 'adaptive']):
+            self.net = networks.RobustLoss(use_gpu=use_gpu,colorspace=colorspace)
+            self.model_name = 'Adaptive Robust Loss Function'
         else:
             raise ValueError("Model [%s] not recognized." % self.model)
 

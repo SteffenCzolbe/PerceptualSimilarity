@@ -17,6 +17,7 @@ from . import pretrained_networks as pn
 from watson import WatsonDistance
 from watson_fft import WatsonDistanceFft
 from watson_vgg import WatsonDistanceVgg
+from robust_loss import RobustLoss as RobustLossFunction
 from color_wrapper import ColorWrapper
 
 # from PerceptualSimilarity.util import util
@@ -245,6 +246,22 @@ class Watson(nn.Module):
         # loss
         return self.net(input, target)
 
+
+class RobustLoss(nn.Module):
+    def __init__(self, size=[3,64,64], use_gpu=True, colorspace='RGB'):
+        super().__init__()
+        self.size = size
+        self.colorspace = colorspace
+        self.loss = RobustLossFunction(size, use_gpu=use_gpu, reduction='none')
+        self.model_name = 'Adaptive Robust Loss Function' 
+
+    def forward(self, in0, in1):
+        if(self.colorspace=='Gray'):
+            in0 = util.tensor2tensorGrayscaleLazy(in0)
+            in1 = util.tensor2tensorGrayscaleLazy(in1)
+        loss = self.loss(in0, in1)
+        return torch.mean(loss, dim=[1,2,3])
+
 class Dist2LogitLayer(nn.Module):
     ''' takes 2 distances, puts through fc layers, spits out value between [0,1] (if use_sigmoid is True) '''
     def __init__(self, chn_mid=32,use_sigmoid=True):
@@ -368,6 +385,8 @@ class L1(FakeNet):
             return value
         else: 
             raise Exception('colorspace not implemented')
+
+        
 
 class DSSIM(FakeNet):
 

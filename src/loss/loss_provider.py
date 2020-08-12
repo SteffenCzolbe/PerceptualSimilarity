@@ -23,7 +23,7 @@ class LossProvider():
         path = os.path.join(current_dir, 'weights', filename)
         return torch.load(path, map_location='cpu')
     
-    def get_loss_function(self, model, colorspace='RGB', reduction='sum', deterministic=False):
+    def get_loss_function(self, model, colorspace='RGB', reduction='sum', deterministic=False, pretrained=True):
         """
         returns a trained loss class.
         model: one of the values returned by self.loss_functions
@@ -43,67 +43,84 @@ class LossProvider():
             if is_greyscale:
                 if deterministic:
                     loss = WatsonDistance(reduction=reduction)
-                    loss.load_state_dict(self.load_state_dict('gray_watson_dct_trial0.pth'))
+                    if pretrained: 
+                        loss.load_state_dict(self.load_state_dict('gray_watson_dct_trial0.pth'))
                 else:
                     loss = ShiftWrapper(WatsonDistance, (), {'reduction': reduction})
-                    loss.loss.load_state_dict(self.load_state_dict('gray_watson_dct_trial0.pth'))
+                    if pretrained: 
+                        loss.loss.load_state_dict(self.load_state_dict('gray_watson_dct_trial0.pth'))
             else:
                 if deterministic:
                     loss = ColorWrapper(WatsonDistance, (), {'reduction': reduction})
-                    loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
+                    if pretrained: 
+                        loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
                 else:
                     loss = ShiftWrapper(ColorWrapper, (WatsonDistance, (), {'reduction': reduction}), {})
-                    loss.loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
+                    if pretrained: 
+                        loss.loss.load_state_dict(self.load_state_dict('rgb_watson_dct_trial0.pth'))
         elif model.lower() in ['watson-fft', 'watson-dft']:
             if is_greyscale:
                 if deterministic:
                     loss = WatsonDistanceFft(reduction=reduction)
-                    loss.load_state_dict(self.load_state_dict('gray_watson_fft_trial0.pth'))
+                    if pretrained: 
+                        loss.load_state_dict(self.load_state_dict('gray_watson_fft_trial0.pth'))
                 else:
                     loss = ShiftWrapper(WatsonDistanceFft, (), {'reduction': reduction})
-                    loss.loss.load_state_dict(self.load_state_dict('gray_watson_fft_trial0.pth'))
+                    if pretrained: 
+                        loss.loss.load_state_dict(self.load_state_dict('gray_watson_fft_trial0.pth'))
             else:
                 if deterministic:
                     loss = ColorWrapper(WatsonDistanceFft, (), {'reduction': reduction})
-                    loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
+                    if pretrained: 
+                        loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
                 else:
                     loss = ShiftWrapper(ColorWrapper, (WatsonDistanceFft, (), {'reduction': reduction}), {})
-                    loss.loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
+                    if pretrained: 
+                        loss.loss.load_state_dict(self.load_state_dict('rgb_watson_fft_trial0.pth'))
         elif model.lower() in ['watson-vgg', 'watson-deep']:
             if is_greyscale:
                 loss = GreyscaleWrapper(WatsonDistanceVgg, (), {'reduction': reduction})
-                loss.loss.load_state_dict(self.load_state_dict('gray_watson_vgg_trial0.pth'))
+                if pretrained: 
+                    loss.loss.load_state_dict(self.load_state_dict('gray_watson_vgg_trial0.pth'))
             else:
                 loss = WatsonDistanceVgg(reduction=reduction)
-                loss.load_state_dict(self.load_state_dict('rgb_watson_vgg_trial0.pth'))
+                if pretrained: 
+                    loss.load_state_dict(self.load_state_dict('rgb_watson_vgg_trial0.pth'))
         elif model.lower() in ['deeploss-vgg']:
             if is_greyscale:
                 loss = GreyscaleWrapper(PNetLin, (), {'pnet_type': 'vgg', 'reduction': reduction, 'use_dropout': False})
-                loss.loss.load_state_dict(self.load_state_dict('gray_pnet_lin_vgg_trial0.pth'))
+                if pretrained: 
+                    loss.loss.load_state_dict(self.load_state_dict('gray_pnet_lin_vgg_trial0.pth'))
             else:
                 loss = PNetLin(pnet_type='vgg', reduction=reduction, use_dropout=False)
-                loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_vgg_trial0.pth'))
+                if pretrained: 
+                    loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_vgg_trial0.pth'))
         elif model.lower() in ['deeploss-squeeze']:
             if is_greyscale:
                 loss = GreyscaleWrapper(PNetLin, (), {'pnet_type': 'squeeze', 'reduction': reduction, 'use_dropout': False})
-                loss.loss.load_state_dict(self.load_state_dict('gray_pnet_lin_squeeze_trial0.pth'))
+                if pretrained: 
+                    loss.loss.load_state_dict(self.load_state_dict('gray_pnet_lin_squeeze_trial0.pth'))
             else:
                 loss = PNetLin(pnet_type='squeeze', reduction=reduction, use_dropout=False)
-                loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_squeeze_trial0.pth'))
+                if pretrained: 
+                    loss.load_state_dict(self.load_state_dict('rgb_pnet_lin_squeeze_trial0.pth'))
         elif model.lower() in ['adaptive']:
             def map_weights(states):
                 return OrderedDict([(k[1:], v) for k, v in states.items()])
             if is_greyscale:
                 loss = GreyscaleWrapper(RobustLoss, (), {'image_size':[3,64,64], 'use_gpu':False, 'trainable':False, 'reduction':reduction})
-                loss.loss.load_state_dict(map_weights(self.load_state_dict('gray_adaptive_trial0.pth')))
+                if pretrained: 
+                    loss.loss.load_state_dict(map_weights(self.load_state_dict('gray_adaptive_trial0.pth')))
             else:
                 loss = RobustLoss(image_size=[3,64,64], use_gpu=False, trainable=False, reduction=reduction)
-                loss.load_state_dict(map_weights(self.load_state_dict('rgb_adaptive_trial0.pth')))
+                if pretrained: 
+                    loss.load_state_dict(map_weights(self.load_state_dict('rgb_adaptive_trial0.pth')))
         else:
             raise Exception('Metric "{}" not implemented'.format(model))
 
         # freeze all training of the loss functions
-        for param in loss.parameters():
-            param.requires_grad = False
+        if pretrained: 
+            for param in loss.parameters():
+                param.requires_grad = False
         
         return loss

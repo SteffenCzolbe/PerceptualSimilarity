@@ -23,12 +23,13 @@ class LossProvider():
         path = os.path.join(current_dir, 'weights', filename)
         return torch.load(path, map_location='cpu')
     
-    def get_loss_function(self, model, colorspace='RGB', reduction='sum', deterministic=False, pretrained=True):
+    def get_loss_function(self, model, colorspace='RGB', reduction='sum', deterministic=False, pretrained=True, image_size=None):
         """
         returns a trained loss class.
         model: one of the values returned by self.loss_functions
         colorspace: 'LA' or 'RGB'
         deterministic: bool, if false (default) uses shifting of image blocks for watson-fft
+        image_size: tuple, size of input images. Only required for adaptive loss. Eg: [3, 64, 64]
         """
         is_greyscale = colorspace in ['grey', 'Grey', 'LA', 'greyscale', 'grey-scale']
         
@@ -107,12 +108,13 @@ class LossProvider():
         elif model.lower() in ['adaptive']:
             def map_weights(states):
                 return OrderedDict([(k[1:], v) for k, v in states.items()])
+            assert image_size is not None, 'Adaptive loss requires image size input'
             if is_greyscale:
-                loss = GreyscaleWrapper(RobustLoss, (), {'image_size':[3,64,64], 'use_gpu':False, 'trainable':False, 'reduction':reduction})
+                loss = GreyscaleWrapper(RobustLoss, (), {'image_size':image_size, 'use_gpu':False, 'trainable':False, 'reduction':reduction})
                 if pretrained: 
                     loss.loss.load_state_dict(map_weights(self.load_state_dict('gray_adaptive_trial0.pth')))
             else:
-                loss = RobustLoss(image_size=[3,64,64], use_gpu=False, trainable=False, reduction=reduction)
+                loss = RobustLoss(image_size=image_size, use_gpu=False, trainable=False, reduction=reduction)
                 if pretrained: 
                     loss.load_state_dict(map_weights(self.load_state_dict('rgb_adaptive_trial0.pth')))
         else:

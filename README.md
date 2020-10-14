@@ -1,11 +1,13 @@
 # A Loss Function for Generative Neural Networks Based on Watson’s Perceptual Model
-## Code supplement for Anonymous CVPR submission
 
-## Anonymous, 2019
+## Steffen Czolbe, Oswin Krause, Igemar Cox, Christian Igel
+## NeurIPS 2020
+
+[[Arxiv Paper]](https://arxiv.org/abs/2006.15057) [Video]
 
 <img src='./img/titleimage.png' width=500>
 
-This repository contains the similarity metrics designed and evaluated in the paper, and instructions and code to re-run the experiments. Implementation in the deep-learning framework PyTorch. Code supplied in Python 3 files and Jupyter Notebooks.
+This repository contains the similarity metrics designed and evaluated in the [paper](https://arxiv.org/abs/2006.15057), and instructions and code to re-run the experiments. Implementation in the deep-learning framework PyTorch. Code supplied in Python 3 files and Jupyter Notebooks.
 
 ## Dependencies
 The project is implemented in python. Dependencies can be installed via
@@ -23,12 +25,12 @@ Next, we activate it and install our dependencies
 source venv-perceptual-sim/bin/activate
 pip3 install -r requirements.txt 
 ```
-Since we want to use this kernel within jupyter notebooks, we also need to register it as an ipython kernel.
+If you want to use this kernel within jupyter notebooks, you also need to register it as an ipython kernel.
 ```bash
 ipython kernel install --user --name=venv-perceptual-sim
 ```
 
-## Similarity metrics
+# Use the similarity metrics
 
 The presented similarity metrics can be included in your projects by importing the ``LossProvider``. It makes all pre-trained similarity metrics accessible. The example below shows how to build the ``Watson-DFT`` metric, and loads the weights tuned on the 2AFC dataset. 
 
@@ -36,17 +38,22 @@ The presented similarity metrics can be included in your projects by importing t
 from loss.loss_provider import LossProvider
 
 provider = LossProvider()
-loss_function = provider.get_loss_function('Watson-DFT', colorspace='RGB', reduction='sum')
+loss_function = provider.get_loss_function('Watson-DFT', colorspace='RGB', pretrained=True, reduction='sum')
 ```
 
 Parameters:
 
-* The first parameter defines the loss metric. Implemented metrics are ``'L1', 'L2', 'SSIM', 'Watson-DCT', 'Watson-DFT', 'Deeploss-VGG', 'Deeploss-Squeeze'``. 
+* The first parameter defines the loss metric. Implemented metrics are ``'L1', 'L2', 'SSIM', 'Adaptive', 'Watson-DCT', 'Watson-DFT', 'Deeploss-VGG', 'Deeploss-Squeeze'``. 
 * Keyword argument ``colorspace`` defines the color representation and dimensionality of the input. Default is the three-channel ``'RGB'`` model. Mono-channel greyscale representation can be used py passing ``'LA'``. 
+* Keyword argument ``pretrained``. If `True` (default), the weights pre-trained on the 2AFC task are loaded.
 * Keyword argument ``reduction``, with behaviour according to PyTorch guideline. Default value is ``reduction='sum'``. All metrics further support option ``reduction='none'``.
 * Keyword argument ``deterministic``. Determines the shifting behaviour of metrics ``'Watson-DCT'`` and ``'Watson-DFT'``. The shifts make the metric non-deterministic, but lead to faster convergence and better results. Though in some cases we might prefer a deterministic behaviour. Default ``deterministic=False``.
+* Keyword argument ``image_size``. Only required for `'Adaptive'`-Loss, as the implementation provided by the authors requires the input size. Example: `image_size=(3, 64, 64)`.
 
 # Experiments
+<span style="color:red">WARNING:</span> This part of the codebase is extremely unorganized. It was created as part of a master thesis, whithout much experience on how to write or maintain code for research. There is no neat `run_all_experiments_and_make_me_beacon.sh` script here. We provide the code as is, as we believe it is still helpfull for those willing and determined enough to work with it. You have been warned.
+
+
 The following instructions allow you to re-run all experiments presented in the paper.
 
 
@@ -93,7 +100,7 @@ The VAEs presented in the paper can be retrained with code from directories ``sr
 * a directory `comparison`, in which comparison images are saved
 
 
-## Training Resource Requirements
-The resource experiment is located in the notebook `src/runtime/runtime_experiment.ipynb`. Re-Create the experiment by executing all cells of the notebook in order. The last cell prints averaged results.
+## Measure Resource Requirements
+The resource experiment is located in `src/runtime/runtime_experiment.py`. It will run all loss functions multiple times, and print out the averaged measurments at the end. Results are also saved as as a pickle file.
 
 

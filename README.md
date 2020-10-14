@@ -9,6 +9,34 @@
 
 This repository contains the similarity metrics designed and evaluated in the [paper](https://arxiv.org/abs/2006.15057), and instructions and code to re-run the experiments. Implementation in the deep-learning framework PyTorch. Code supplied in Python 3 files and Jupyter Notebooks.
 
+# Use the similarity metrics
+
+The presented similarity metrics can be included in your projects by importing the ``LossProvider``. It makes all pre-trained similarity metrics accessible. The example below shows how to build the ``Watson-DFT`` metric, and loads the weights tuned on the 2AFC dataset. 
+
+```python
+from loss.loss_provider import LossProvider
+
+provider = LossProvider()
+loss_function = provider.get_loss_function('Watson-DFT', colorspace='RGB', pretrained=True, reduction='sum')
+
+import torch
+img0 = torch.zeros(1,3,64,64)
+img1 = torch.zeros(1,3,64,64)
+loss = loss_function(img0, img1)
+```
+
+Parameters:
+
+* The first parameter defines the loss metric. Implemented metrics are ``'L1', 'L2', 'SSIM', 'Adaptive', 'Watson-DCT', 'Watson-DFT', 'Deeploss-VGG', 'Deeploss-Squeeze'``. 
+* Keyword argument ``colorspace`` defines the color representation and dimensionality of the input. Default is the three-channel ``'RGB'`` model. Mono-channel greyscale representation can be used py passing ``'LA'``. 
+* Keyword argument ``pretrained``. If `True` (default), the weights pre-trained on the 2AFC task are loaded.
+* Keyword argument ``reduction``, with behaviour according to PyTorch guideline. Default value is ``reduction='sum'``. All metrics further support option ``reduction='none'``.
+* Keyword argument ``deterministic``. Determines the shifting behaviour of metrics ``'Watson-DCT'`` and ``'Watson-DFT'``. The shifts make the metric non-deterministic, but lead to faster convergence and better results. Though in some cases we might prefer a deterministic behaviour. Default ``deterministic=False``.
+* Keyword argument ``image_size``. Only required for `'Adaptive'`-Loss, as the implementation provided by the authors requires the input size. Example: `image_size=(3, 64, 64)`.
+
+# Experiments
+**WARNING:** This part of the codebase is extremely unorganized. It was created as part of a master thesis, whithout much experience on how to write or maintain code for research. There is no neat `run_all_experiments_and_make_me_beacon.sh` script here. We provide the code as is, as we believe it is still helpfull for those willing and determined enough to work with it. You have been warned.
+
 ## Dependencies
 The project is implemented in python. Dependencies can be installed via
 ```bash
@@ -29,29 +57,6 @@ If you want to use this kernel within jupyter notebooks, you also need to regist
 ```bash
 ipython kernel install --user --name=venv-perceptual-sim
 ```
-
-# Use the similarity metrics
-
-The presented similarity metrics can be included in your projects by importing the ``LossProvider``. It makes all pre-trained similarity metrics accessible. The example below shows how to build the ``Watson-DFT`` metric, and loads the weights tuned on the 2AFC dataset. 
-
-```python
-from loss.loss_provider import LossProvider
-
-provider = LossProvider()
-loss_function = provider.get_loss_function('Watson-DFT', colorspace='RGB', pretrained=True, reduction='sum')
-```
-
-Parameters:
-
-* The first parameter defines the loss metric. Implemented metrics are ``'L1', 'L2', 'SSIM', 'Adaptive', 'Watson-DCT', 'Watson-DFT', 'Deeploss-VGG', 'Deeploss-Squeeze'``. 
-* Keyword argument ``colorspace`` defines the color representation and dimensionality of the input. Default is the three-channel ``'RGB'`` model. Mono-channel greyscale representation can be used py passing ``'LA'``. 
-* Keyword argument ``pretrained``. If `True` (default), the weights pre-trained on the 2AFC task are loaded.
-* Keyword argument ``reduction``, with behaviour according to PyTorch guideline. Default value is ``reduction='sum'``. All metrics further support option ``reduction='none'``.
-* Keyword argument ``deterministic``. Determines the shifting behaviour of metrics ``'Watson-DCT'`` and ``'Watson-DFT'``. The shifts make the metric non-deterministic, but lead to faster convergence and better results. Though in some cases we might prefer a deterministic behaviour. Default ``deterministic=False``.
-* Keyword argument ``image_size``. Only required for `'Adaptive'`-Loss, as the implementation provided by the authors requires the input size. Example: `image_size=(3, 64, 64)`.
-
-# Experiments
-<span style="color:red">WARNING:</span> This part of the codebase is extremely unorganized. It was created as part of a master thesis, whithout much experience on how to write or maintain code for research. There is no neat `run_all_experiments_and_make_me_beacon.sh` script here. We provide the code as is, as we believe it is still helpfull for those willing and determined enough to work with it. You have been warned.
 
 ## Download Data
 We use three datasets: MNIST, celebA and 2AFC. Execute the following commands to download all three datasets:
@@ -98,5 +103,11 @@ The VAEs presented in the paper can be retrained with code from directories ``sr
 
 ## Measure Resource Requirements
 The resource experiment is located in `src/runtime/runtime_experiment.py`. It will run all loss functions multiple times, and print out the averaged measurments at the end. Results are also saved as as a pickle file.
+
+# Thanks
+We thank Richard Zhang, Phillip Isola, Alexei A. Efros, Eli Shechtman, Oliver Wang for their Two Alternative Forced Choice (2AFC) dataset, and implementation of the perceptual tuning code. We adapted large parts of their [code](https://github.com/richzhang/PerceptualSimilarity) for this project.
+
+We also thank Jonathan T. Barron for providing the implementation f his [General and Adaptive Robust Loss Function](https://github.com/jonbarron/robust_loss_pytorch), which we incuded in this project.
+
 
 

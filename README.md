@@ -53,10 +53,6 @@ Parameters:
 # Experiments
 <span style="color:red">WARNING:</span> This part of the codebase is extremely unorganized. It was created as part of a master thesis, whithout much experience on how to write or maintain code for research. There is no neat `run_all_experiments_and_make_me_beacon.sh` script here. We provide the code as is, as we believe it is still helpfull for those willing and determined enough to work with it. You have been warned.
 
-
-The following instructions allow you to re-run all experiments presented in the paper.
-
-
 ## Download Data
 We use three datasets: MNIST, celebA and 2AFC. Execute the following commands to download all three datasets:
 ```bash

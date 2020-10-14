@@ -132,7 +132,7 @@ def runtime_test(x, loss_function, epochs=500):
 
 loss_provider = LossProvider()
 results = {}
-for _ in range(5):
+for _ in range(3):
     for color_model in ['RGB', 'LA']:
         for loss_metric in loss_provider.loss_functions:
             if loss_metric == 'Watson-vgg':
@@ -148,7 +148,7 @@ for _ in range(5):
             results[key]['runtime'].append(res['runtime'])
             results[key]['memory'].append(res['memory'])
 
-pickle.dump(results, open(os.path.join(g_drive_path, 'runtime_results_repitition.pickle'), 'wb'))
+pickle.dump(results, open('./runtime_results_repitition.pickle', 'wb'))
     
 
 

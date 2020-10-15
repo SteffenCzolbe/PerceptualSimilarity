@@ -3,9 +3,9 @@
 ## Steffen Czolbe, Oswin Krause, Igemar Cox, Christian Igel
 ## NeurIPS 2020
 
-[[Arxiv Paper]](https://arxiv.org/abs/2006.15057) [Video]
+[[Arxiv Paper]](https://arxiv.org/abs/2006.15057) [[Video]](https://youtu.be/qPmHQbR4DeI)
 
-<img src='./img/titleimage.png' width=500>
+[![Video](https://img.youtube.com/vi/qPmHQbR4DeI/hqdefault.jpg)](https://youtu.be/qPmHQbR4DeI)
 
 This repository contains the similarity metrics designed and evaluated in the [paper](https://arxiv.org/abs/2006.15057), and instructions and code to re-run the experiments. Implementation in the deep-learning framework PyTorch. Code supplied in Python 3 files and Jupyter Notebooks.
 

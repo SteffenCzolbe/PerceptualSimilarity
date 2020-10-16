@@ -1,7 +1,6 @@
 # A Loss Function for Generative Neural Networks Based on Watson’s Perceptual Model
 
-## Steffen Czolbe, Oswin Krause, Igemar Cox, Christian Igel
-## NeurIPS 2020
+Steffen Czolbe, Oswin Krause, Igemar Cox, Christian Igel - NeurIPS 2020
 
 [[Arxiv Paper]](https://arxiv.org/abs/2006.15057) [[Video]](https://youtu.be/qPmHQbR4DeI)
 

@@ -62,7 +62,7 @@ transformers = transforms.Compose([
     transforms.Grayscale(num_output_channels=1),         # grayscale images
     transforms.Pad((data_dim[1] - 28) // 2, fill=0, padding_mode='constant'), # padding
     transforms.ToTensor(),                               # as tensors
-    transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))
+    transforms.Normalize((0.5,),(0.5,))
 ])
 
 train_set = datasets.ImageFolder(dataset + 'train/', transform=transformers)

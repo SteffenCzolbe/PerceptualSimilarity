@@ -61,7 +61,8 @@ kwargs = {'num_workers': 1, 'pin_memory': True} if device == "cuda" else {}
 transformers = transforms.Compose([
     transforms.Grayscale(num_output_channels=1),         # grayscale images
     transforms.Pad((data_dim[1] - 28) // 2, fill=0, padding_mode='constant'), # padding
-    transforms.ToTensor()                                # as tensors
+    transforms.ToTensor(),                               # as tensors
+    transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))
 ])
 
 train_set = datasets.ImageFolder(dataset + 'train/', transform=transformers)
@@ -88,7 +89,14 @@ test_loader = torch.utils.data.DataLoader(
 
 
 # helper function
-to_img = transforms.ToPILImage()
+to_img_torch = transforms.ToPILImage()
+
+def to_img(x):
+    # rescale to 0..1
+    x = (x+1)/2 
+    img = to_img_torch(x)
+    return img
+    
 
 
 # In[6]:

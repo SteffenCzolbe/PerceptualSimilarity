@@ -49,7 +49,7 @@ batch_size = 64
 # key word args for loading data
 kwargs = {'num_workers': 1, 'pin_memory': True} if device == "cuda" else {}
 
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5),(0.5, 0.5, 0.5))])
+transform = transforms.Compose([transforms.ToTensor()])
 dataset = datasets.ImageFolder(dataset_path, transform=transform)
 data_size = len(dataset)
 train_size = int(0.9 * data_size)
@@ -76,8 +76,6 @@ test_loader = torch.utils.data.DataLoader(
 to_img_torch = transforms.ToPILImage()
 
 def to_img(x):
-    # rescale to 0..1
-    x = (x+1)/2 
     img = to_img_torch(x)
     return img
     

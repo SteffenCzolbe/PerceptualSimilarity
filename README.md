@@ -10,7 +10,7 @@ This repository contains the similarity metrics designed and evaluated in the [p
 
 # Use the similarity metrics
 
-The presented similarity metrics can be included in your projects by importing the `LossProvider`. It makes all pre-trained similarity metrics accessible. The example below shows how to build the `Watson-DFT` metric, and loads the weights tuned on the 2AFC dataset. The input for all loss functions is expected to be normalized to a -1..1 interval.
+The presented similarity metrics can be included in your projects by importing the `LossProvider`. It makes all pre-trained similarity metrics accessible. The example below shows how to build the `Watson-DFT` metric, and loads the weights tuned on the 2AFC dataset. The input for all loss functions is expected to be normalized to a 0..1 interval.
 
 ```python
 from loss.loss_provider import LossProvider

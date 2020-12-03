@@ -30,6 +30,7 @@ terminado==0.8.3
 testpath==0.4.4
 torch==1.4.0
 torchvision==0.5.0
+torch-dct==0.1.5
 tqdm==4.40.2
 urllib3==1.25.8
 virtualenv==16.7.9

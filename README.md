@@ -70,6 +70,8 @@ ipython kernel install --user --name=venv-perceptual-sim
 
 We use three datasets: MNIST, celebA and 2AFC. Execute the following commands to download all three datasets:
 
+Note: As of Dec-2020 the google-drive download of the celebA dataset is experiencing some issues. If you are having trouble with the script, we recomment manually downloading the file `img_align_celeba.zip` from [here](https://drive.google.com/file/d/0B7EVK8r0v71pZjFTYXZWM3FlRnM/view?usp=sharing), placing it in the `$PSHOME/datasets/celebA` directory and renaming it to `celebA.zip`. Then the `celebA_download` script can betweaked by commenting out the downloading in line 55. The unpacking and pre-processing steps from this script still need to be executed.
+
 ```bash
 cd ./src/
 PSHOME=$(pwd)

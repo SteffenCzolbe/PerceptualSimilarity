@@ -3,6 +3,11 @@ venv*
 tmp.*
 percept-sim
 
+# python files generated from jupyter notebooks
+src/perceptual_sim_training/eval.py
+src/perceptual_sim_training/eval-plot.py
+src/perceptual_sim_training/transition_weights.py
+
 
 *.ipynb_checkpoints*
 

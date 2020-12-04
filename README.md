@@ -96,21 +96,23 @@ cd $PSHOME/perceptual_sim_training
 ./scripts/train.sh
 ```
 
-### Evaluate
+### Evaluate and Generate Figures
 
-The evaluation of the metrics performance on the validation section of the 2AFC dataset is performed in jupyter notebooks. We start jupyter:
-
+The evaluation (Test) of the metrics performance on the validation section of the 2AFC dataset, and the Bar-plot from th paper is performed by the script
 ```bash
-jupyter notebook
+cd $PSHOME/perceptual_sim_training
+./scripts/eval_and_plot.sh
 ```
 
-Wait for jupyter to open in your browser. Navigate to `src/perceptual-sim-training/eval.ipynb`. Open the notebook, and select your virtual environment, and execute all cells. The 2AFC scores are written to a file.
-
-To generate the plots from the paper, navigate to the notebook `src/perceptual-sim-training/eval-plot.ipynb` and execute it.
+The plots will be generated into `src/perceptual_sim_training/plots/`.
 
 ## Transition weights to the LossProvider
-
-To transition loss functions tuned on the 2AFC dataset to the loss provider, we open the jupyter notebook `src/perceptual-sim-training/transition_weights.ipynb` and execute it. The lates model checkpoints from the 2AFC experiment are extracted, renamed and saved into the he 2AFC dataset to the loss provider, we open the jupyter notebook `src/loss/weights/` directory.
+The loss-function weights have to be manually transitioned to the `LossProvider`, which will be used for the future experiments. This is done by calling the script
+```bash
+cd $PSHOME/perceptual_sim_training
+./scripts/transition_weights.sh
+```
+The lates model checkpoints from the 2AFC experiment are extracted, renamed and saved into the he 2AFC dataset to the loss provider in the `src/loss/weights/` directory.
 
 ## Train VAEs
 

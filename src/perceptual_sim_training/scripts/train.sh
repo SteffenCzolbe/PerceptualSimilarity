@@ -10,6 +10,6 @@ python ./train.py --use_gpu --model watson --net fft --colorspace RGB --name rgb
 python ./train.py --use_gpu --model net-lin --net vgg  --colorspace RGB --name rgb_pnet_lin_vgg_trial0 --trainloss ranked
 python ./train.py --use_gpu --model net-lin --net squeeze  --colorspace RGB --name rgb_pnet_lin_squeeze_trial0 --trainloss ranked 
 
-
+# Adaptive, per reviewer request
 python ./train.py --use_gpu --model adaptive --colorspace RGB --name rgb_adaptive_trial0 --trainloss weightedsigmoid --nepoch 10 --nepoch_decay 10 --lr 0.0002
 python ./train.py --use_gpu --model adaptive --colorspace Gray --name gray_adaptive_trial0 --trainloss weightedsigmoid --nepoch 10 --nepoch_decay 10 --lr 0.0002

@@ -60,11 +60,7 @@ source venv-perceptual-sim/bin/activate
 pip3 install -r requirements.txt
 ```
 
-If you want to use this kernel within jupyter notebooks, you also need to register it as an ipython kernel.
-
-```bash
-ipython kernel install --user --name=venv-perceptual-sim
-```
+Part of the codebase is implemented in jupyter notebooks (sorry). The provided scripts convert these automatically to python files, and executes those python files instead. Interaction with the notebooks is only required if you want to perform changes to the codebase. 
 
 ## Download Data
 
@@ -119,7 +115,7 @@ The lates model checkpoints from the 2AFC experiment are extracted, renamed and 
 The VAEs presented in the paper can be retrained with code from directories `src/vae/mnist` and `src/vae/celebA`. Each directory contains 5 Files:
 
 - the implementation of the model in `celebA_vae.py` or `mnist_vae.py`
-- a notebook `train.ipynb`, containing code to train the model. Loss function and Hyperparameters are defined in the last cell. During training, model checkpoints and samples are saved in the `results` directory.
+- a file `train.py`, containing code to train the model. Loss function and Hyperparameters are defined at the end of the file. During training, model checkpoints and samples are saved in the `results` directory.
 - a directory `results`, in which models and sample images are saved during training
 - a notebook `evaluation.ipynb`, containg code to generate the comparison images shown in the paper.
 - a directory `comparison`, in which comparison images are saved

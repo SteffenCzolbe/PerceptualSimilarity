@@ -1,3 +1,4 @@
+dominate==2.6.0
 httplib2==0.9.2
 imageio==2.6.1
 importlib-metadata==1.5.0

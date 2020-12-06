@@ -72,8 +72,8 @@ def to_img(x):
 
 models =OrderedDict()
 models['Watson-fft'] = torch.load('./results/watson-fft_lam_e1/model.pckl', map_location=device)
-models['adaptive'] = torch.load('./results/adaptive_lam_e0/model.pckl', map_location=device)
 models['SSIM'] = torch.load('./results/ssim_lam_e9/model.pckl', map_location=device)
+models['adaptive'] = torch.load('./results/adaptive_lam_e0/model.pckl', map_location=device)
 models['Deeploss-squeeze'] = torch.load('./results/deeploss-squeeze_lam_e9/model.pckl', map_location=device)
 models['Deeploss-vgg'] = torch.load('./results/deeploss-vgg_lam_e9/model.pckl', map_location=device)
 

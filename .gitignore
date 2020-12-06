@@ -7,6 +7,8 @@ percept-sim
 src/perceptual_sim_training/eval.py
 src/perceptual_sim_training/eval-plot.py
 src/perceptual_sim_training/transition_weights.py
+src/vae/celebA/results*
+src/vae/mnist/results*
 
 
 *.ipynb_checkpoints*

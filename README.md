@@ -8,6 +8,13 @@ Steffen Czolbe, Oswin Krause, Igemar Cox, Christian Igel - NeurIPS 2020
 
 This repository contains the similarity metrics designed and evaluated in the [paper](https://arxiv.org/abs/2006.15057), and instructions and code to re-run the experiments. Implementation in the deep-learning framework PyTorch. Code supplied in Python 3 files and Jupyter Notebooks.
 
+> **Note**: This is the post-publication updated version of the repository. It contains the following changes:
+>
+> - Fixed an issue leading to inconsistent data-normalization across experiments. All experiments now take data normalized to the 0..1 range.
+> - Re-tuned hyperparameters and re-generated all figures from the paper. We observed overall very similar results.
+> - Added multiple perviously not mentioned dependencies.
+> - Added multiple shell-scripts to reproduce all experiments more easily. Jupyter notebook is no longer required to reproduce the paper \o/
+
 # Use the similarity metrics
 
 The presented similarity metrics can be included in your projects by importing the `LossProvider`. It makes all pre-trained similarity metrics accessible. The example below shows how to build the `Watson-DFT` metric, and loads the weights tuned on the 2AFC dataset. The input for all loss functions is expected to be normalized to a 0..1 interval.
@@ -35,7 +42,7 @@ Parameters:
 
 # Experiments
 
-**WARNING:** This part of the codebase is extremely unorganized. It was created as part of a master thesis, whithout much experience on how to write or maintain code for research. There is no neat `run_all_experiments_and_make_me_beacon.sh` script here. We provide the code as is, as we believe it is still helpfull for those willing and determined enough to work with it. You have been warned.
+> **Warning:** This part of the codebase is unorganized. It was created as part of a master thesis, whithout much experience on how to write or maintain code for research. We have since made some progress to improve ease of use, but there is no neat `run_all_experiments_and_make_me_beacon.sh` script here. We provide the code as is, as we believe it is still helpfull for those willing and determined enough to work with it. You have been warned.
 
 ## Dependencies
 
@@ -60,7 +67,7 @@ source venv-perceptual-sim/bin/activate
 pip3 install -r requirements.txt
 ```
 
-Part of the codebase is implemented in jupyter notebooks (sorry). The provided scripts convert these automatically to python files, and executes those python files instead. Interaction with the notebooks is only required if you want to perform changes to the codebase. 
+Part of the codebase is implemented in jupyter notebooks (sorry). The provided scripts convert these automatically to python files, and executes those python files instead. Interaction with the notebooks is only required if you want to perform changes to the codebase.
 
 ## Download Data
 
@@ -95,6 +102,7 @@ cd $PSHOME/perceptual_sim_training
 ### Evaluate and Generate Figures
 
 The evaluation (Test) of the metrics performance on the validation section of the 2AFC dataset, and the Bar-plot from th paper is performed by the script
+
 ```bash
 cd $PSHOME/perceptual_sim_training
 ./scripts/eval_and_plot.sh
@@ -103,11 +111,14 @@ cd $PSHOME/perceptual_sim_training
 The plots will be generated into `src/perceptual_sim_training/plots/`.
 
 ## Transition weights to the LossProvider
+
 The loss-function weights have to be manually transitioned to the `LossProvider`, which will be used for the future experiments. This is done by calling the script
+
 ```bash
 cd $PSHOME/perceptual_sim_training
 ./scripts/transition_weights.sh
 ```
+
 The lates model checkpoints from the 2AFC experiment are extracted, renamed and saved into the he 2AFC dataset to the loss provider in the `src/loss/weights/` directory.
 
 ## Train VAEs

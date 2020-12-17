@@ -442,7 +442,7 @@ print('available loss functions: {}'.format(provider.loss_functions))
 
 
 # trains l2 loss comparison
-for loss_name, lam, pretrained in [('adaptive', 0, False), ('ssim', 9, True), ('watson-fft', 1, True), ('deeploss-vgg', 9, True), ('deeploss-squeeze', 9, True),]:
+for loss_name, lam, pretrained in [('adaptive', 0, False), ('ssim', 9, True), ('watson-fft', 0, True), ('deeploss-vgg', 9, True), ('deeploss-squeeze', 9, True),]:
     print('evaluating function {} with lambda e^{}'.format(loss_name, lam))
     model = MnistVAE(latent_space=2, input_size=data_dim[1:])
     loss_fun = provider.get_loss_function(loss_name, 'LA', pretrained=pretrained, image_size=(3,32,32)) # for adaptive loss, we fake 3 channels

@@ -424,7 +424,7 @@ print('available loss functions: {}'.format(provider.loss_functions))
 
 
 # trains l2 loss comparison
-for loss_name, lam, pretrained in [('ssim', 12, True), ('watson-fft', 0, True), ('deeploss-vgg', 10, True), ('deeploss-squeeze', 9, True), ('adaptive', 2, False)]:
+for loss_name, lam, pretrained in [('ssim', 13, True), ('watson-fft', 0, True), ('deeploss-vgg', 10, True), ('deeploss-squeeze', 9, True), ('adaptive', 3, False)]:
     print('evaluating function {} with lambda e^{}'.format(loss_name, lam))
     model = CelebAVAE(latent_space=256, input_size=data_dim)
     loss_fun = provider.get_loss_function(loss_name, 'RGB', deterministic=False, pretrained=pretrained, image_size=[3,64,64])

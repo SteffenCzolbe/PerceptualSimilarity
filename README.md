@@ -4,8 +4,6 @@ Steffen Czolbe, Oswin Krause, Igemar Cox, Christian Igel - NeurIPS 2020
 
 [[Paper]](https://arxiv.org/abs/2006.15057) [[Video]](https://youtu.be/qPmHQbR4DeI) [[Poster]](img/WatsonPoster.pdf)
 
-> **Note:** The initialy published version of this repository contained inconsistent data normalization across experiments. This has since been fixed, and we are currently re-tuning hyperparameters and re-running experiments. The mostly finsihed updated can be viewed in the branch [normalization_fix](https://github.com/SteffenCzolbe/PerceptualSimilarity/tree/normalization_fix). We re-generated all the figures in the paper, and observe overall very similar results.
-
 [![Video](https://img.youtube.com/vi/qPmHQbR4DeI/hqdefault.jpg)](https://youtu.be/qPmHQbR4DeI)
 
 This repository contains the similarity metrics designed and evaluated in the [paper](https://arxiv.org/abs/2006.15057), and instructions and code to re-run the experiments. Implementation in the deep-learning framework PyTorch. Code supplied in Python 3 files and Jupyter Notebooks.

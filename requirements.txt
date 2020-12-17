@@ -1,5 +1,5 @@
 dominate==2.6.0
-httplib2==0.9.2
+httplib2==0.18.0
 imageio==2.6.1
 importlib-metadata==1.5.0
 ipykernel==5.1.4

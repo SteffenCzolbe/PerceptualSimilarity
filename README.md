@@ -11,7 +11,7 @@ This repository contains the similarity metrics designed and evaluated in the [p
 > **Note**: This is the post-publication updated version of the repository. It contains the following changes:
 >
 > - Fixed an issue leading to inconsistent data-normalization across experiments. All experiments now take data normalized to the 0..1 range.
-> - Re-tuned hyperparameters and re-generated all figures from the paper. We observed overall similar results.
+> - Re-tuned hyperparameters and re-generated all figures from the paper. We observed overall similar results. See a side-by-side comparison [here](https://docs.google.com/presentation/d/1Rc1N09-ZaP03TmVljAN4IQVIvnIJ4f6UgEc7RGccECs/edit?usp=sharing).
 > - Added multiple perviously not included dependencies.
 > - Added multiple shell-scripts to reproduce all experiments more easily. Jupyter notebook is no longer required to reproduce the paper \o/
 

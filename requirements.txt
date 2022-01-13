@@ -20,7 +20,7 @@ mpmath==1.1.0
 numpy==1.18.2
 opencv-python==4.2.0.34
 pandas==1.0.3
-Pillow==7.1.1
+Pillow==9.0.0
 pypng==0.0.20
 requests==2.23.0
 scikit-image==0.16.2

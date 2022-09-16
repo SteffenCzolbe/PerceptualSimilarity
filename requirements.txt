@@ -35,5 +35,5 @@ torch-dct==0.1.5
 tqdm==4.40.2
 urllib3==1.25.8
 virtualenv==16.7.9
-vtk==8.1.2
+vtk==9.0.1
 Werkzeug==1.0.0
